@@ -186,8 +186,6 @@ sub getEditForm {
 		-hoverHelp=>$i18n->get('head block description'),
 		-value=>$self->getValue("headBlock")
 		);
-	if($self->session->config->get("templateParsers")){
-		my @temparray = @{$self->session->config->get("templateParsers")};
 	$properties->raw(qq(
 	    <tr>
 	        <td class='formDescription' valign='top'>
@@ -305,6 +303,7 @@ sub getEditForm {
 	    label       => $i18n->get('field storageIdExample'),
 	    hoverHelp   => $i18n->get('field storageIdExample description'),
 	);
+	
 
 	return $tabform;
 }
@@ -876,7 +875,5 @@ sub www_view {
 	my $self = shift;
 	return $self->session->asset($self->getContainer)->www_view;
 }
-
-
 
 1;
