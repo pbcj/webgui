@@ -297,6 +297,168 @@ Any scratch variables will be available in the template with this syntax:<br/>
 		lastUpdated => 1162088018,
 	},
 
+    'warning default template' => {
+        message     => q{You are attempting to edit a default template. Any changes you make to this template
+                    may be lost when you next upgrade WebGUI. To be safe, you should make a duplicate of this template.},
+        lastUpdated => 0,
+        context     => q{Warning for users attempting to edit a default template},
+    },
+
+    'make duplicate label' => {
+        message     => q{Duplicate this template and edit},
+        lastUpdated => 0,
+        context     => q{Label for URL to make a duplicate and open the duplicate's edit screen},
+    },
+
+    'attachment header index' => {
+        message     => 'Index',
+        lastUpdated => 1241192473,
+        context     => q|header for the sequence number column for attachments|,
+    },
+
+    'attachment header type' => {
+        message     => 'Type',
+        lastUpdated => 1241192473,
+        context     => q|header for the attachment types column|,
+    },
+
+    'attachment header url' => {
+        message     => 'Url',
+        lastUpdated => 1241192473,
+        context     => q|header for the url column for attachments|,
+    },
+
+    'attachment header remove' => {
+        message     => 'Remove',
+        lastUpdated => 1241192473,
+        context     => q|header for the remove button column for attachments|,
+    },
+
+	'attachment display label' => {
+        message     => 'Attachments',
+        lastUpdated => 1241192473,
+        context     => q|field label for displaying existing attachments|,
+     },
+        
+	'attachment add field label' => {
+        message     => 'Add Attachments',
+        lastUpdated => 1241192473,
+        context     => q|field label for adding new attachments|,
+     },
+
+	'attachment add button' => {
+        message     => 'Add', 
+        lastUpdated => 1241192473,
+        context     => q|button text for adding a new attachment|,
+     },
+
+    'usePacked label' => {
+        message     => q{Use Packed Template},
+        lastUpdated => 0,
+        context     => q{Label for asset property},
+    },
+
+    'usePacked description' => {
+        message     => q{Use the packed version of this template for faster downloads},
+        lastUpdated => 0,
+        context     => q{Description of asset property},
+    },
+
+    'css label' => {
+        message     => "Stylesheet (CSS)",
+        lastUpdated => 0,
+        context     => 'Label for a CSS file attachment',
+    },
+
+    'js head label' => {
+        message     => "JavaScript (head)",
+        lastUpdated => 0,
+        context     => "Label for a JS file attachment that goes in the <head> block",
+    },
+
+    'js body label' => {
+        message     => "JavaScript (body)",
+        lastUpdated => 0,
+        context     => "Label for a JS file attachment that goes after all the content in the <body> block",
+    },
+
+    'template in trash' => {
+        message     => q|Template in trash|,
+        lastUpdated => 0,
+    },
+
+    'template in clipboard' => {
+        message     => q|Template in clipboard|,
+        lastUpdated => 0,
+    },
+
+    'Already attached!' => {
+        message     => q|Already attached!|,
+        lastUpdated => 0,
+    },
+
+    'No url!' => {
+        message     => q|No url!|,
+        lastUpdated => 0,
+    },
+
+    'field storageIdExample' => {
+        message     => 'Example Image',
+        lastUpdated => 0,
+    },
+
+    'field storageIdExample description' => {
+        message     => 'An example image to show what the template looks like before the user selects it',
+        lastUpdated => 0,
+    },
+    'Configure' => {
+        message => 'Configure',
+        lastUpdated => 1294247160,
+    },
+    'Fetch Variables' => {
+        message => 'Fetch Variables',
+        lastUpdated => 1294165643,
+    },
+    'Fetch Variables hoverHelp' => {
+        message => 'Try to guess variables from a url that uses this template.',
+        lastUpdated => 1294165643,
+    },
+    'Fetch' => {
+        message => 'Fetch',
+        lastUpdated => 1294165643,
+    },
+    'URL' => {
+        message => 'URL',
+        lastUpdated => 1294165643,
+    },
+    'URL hoverHelp' => {
+        message => 'URL used by the fetch button.',
+        lastUpdated => 1294165643,
+    },
+    'Plain Text?' => {
+        message => 'Preview as Plain Text?',
+        lastUpdated => 1294165643,
+    },
+    'Plain Text hoverHelp' => {
+        message => 'If you mark yes, you will get a plain-text response (useful for seeing the raw output of a template). Otherwise, the output will be rendered as html.',
+        lastUpdated => 1294165643,
+    },
+    'Preview' => {
+        message => 'Preview',
+        lastUpdated => 1294247388,
+    },
+    'Variables' => {
+        message => 'Variables',
+        lastUpdated => 1294165651,
+    },
+    'Variables hoverHelp' => {
+        message => 'Variables used by the render button (in JSON).',
+        lastUpdated => 1294165652,
+    },
+    'Configure Preview' => {
+        message => 'Configure Preview',
+        lastUpdated => 1294251507,
+    },
 };
 
 1;
