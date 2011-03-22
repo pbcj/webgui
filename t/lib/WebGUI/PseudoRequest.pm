@@ -1,11 +1,9 @@
 package WebGUI::PseudoRequest;
 
-use strict;
-
 =head1 LEGAL
 
  -------------------------------------------------------------------
-  WebGUI is Copyright 2001-2005 Plain Black Corporation.
+  WebGUI is Copyright 2001-2009 Plain Black Corporation.
  -------------------------------------------------------------------
   Please read the legal notices (docs/legal.txt) and the license
   (docs/license.txt) that came with this distribution before using
@@ -13,6 +11,33 @@ use strict;
  -------------------------------------------------------------------
   http://www.plainblack.com                     info@plainblack.com
  -------------------------------------------------------------------
+
+=cut
+
+use strict;
+
+use Test::MockObject;
+
+BEGIN {
+    Test::MockObject->fake_module(
+        'Apache2::Cookie',
+        new => sub {
+            my $class = shift;
+            my $self = Test::MockObject->new;
+            $self->set_isa($class);
+            $self->set_true(qw(expires domain bake));
+        },
+    );
+
+    Test::MockObject->fake_module('APR::Request::Apache2',
+        handle => sub {
+            return $_[1];
+        },
+    );
+}
+
+use WebGUI::PseudoRequest::Headers;
+use WebGUI::PseudoRequest::Upload;
 
 =head1 NAME
 
@@ -28,163 +53,6 @@ Why in the world would you want to do this?  Well, when doing API testing someti
 you run across things that require a request object, but you don't really want to
 fire up Apache in order to do it.  This will let you bypass that.
 
-=cut
-
-package WebGUI::PseudoRequest::Headers;
-
-#----------------------------------------------------------------------------
-
-=head1 NAME
-
-Package WebGUI::PseudoRequest::Headers
-
-=head2 new
-
-Construct a new PseudoRequest::Headers object.  This is just for holding headers.
-It doesn't do any magic.
-
-=cut
-
-sub new {
-	my $this = shift;
-	my $class = ref($this) || $this;
-	my $self = { headers => {} };
-	bless $self, $class;
-	return $self;
-}
-
-#----------------------------------------------------------------------------
-
-=head2 set( $key, $value )
-
-Set a key, value pair in the header object.
-
-=cut
-
-sub set {
-	my $self = shift;
-	my $key = shift;
-	my $value = shift;
-	$self->{headers}->{$key} = $value;
-}
-
-#----------------------------------------------------------------------------
-
-=head2 fetch
-
-Returns the entire internal hashref of headers.
-
-=cut
-
-sub fetch {
-	my $self = shift;
-	return $self->{headers};
-}
-
-package WebGUI::PseudoRequest::Upload;
-
-#----------------------------------------------------------------------------
-
-=head1 NAME
-
-Package WebGUI::PseudoRequest::Upload
-
-=head2 new ( [$file] )
-
-Construct a new PseudoRequest::Upload object.  This is just for holding headers.
-It doesn't do any magic.
-
-=head3 $file
-
-The complete path to a file.  If this is sent to new, it will go ahead and open
-a filehandle to that file for you, saving you the need to call the fh, filename
-and filesize methods.
-
-=cut
-
-sub new {
-	my $this = shift;
-	my $class = ref($this) || $this;
-	my $self = {
-        fh       => undef,
-        size     => 0,
-        filename => '',
-        output   => '',
-    };
-    my $file = shift;
-    if ($file and -e $file) {
-        $self->{filename} = $file;
-        $self->{size} = (stat $file)[7];
-        open my $fh, '<' . $file or
-            die "Unable to open $file for reading and creating a filehandle: $!\n";
-        $self->{fh} = $fh;
-    }
-	bless $self, $class;
-	return $self;
-}
-
-#----------------------------------------------------------------------------
-
-=head2 fh ( [$value] )
-
-Getter and setter for fh.  If $value is passed in, it will set the internal filehandle in
-the object to that.  Returns the filehandle stored in the object.
-
-=cut
-
-sub fh {
-	my $self = shift;
-	my $value = shift;
-	if (defined $value) {
-		$self->{fh} = $value;
-	}
-	return $self->{fh};
-}
-
-#----------------------------------------------------------------------------
-
-=head2 filaname ( [$value] )
-
-Getter and setter for filename.  If $value is passed in, it will set the filename in
-the object to that.  Returns the filename in the object.
-
-=cut
-
-sub filename {
-	my $self = shift;
-	my $value = shift;
-	if (defined $value) {
-		$self->{filename} = $value;
-	}
-	return $self->{filename};
-}
-
-#----------------------------------------------------------------------------
-
-=head2 size ( [$value] )
-
-Getter and setter for size.  If $value is passed in, it will set the internal size in
-the object to that.  Returns the size stored in the object.
-
-=cut
-
-sub size {
-	my $self = shift;
-	my $value = shift;
-	if (defined $value) {
-		$self->{size} = $value;
-	}
-	return $self->{size};
-}
-
-package WebGUI::PseudoRequest;
-
-#----------------------------------------------------------------------------
-
-=head1 NAME
-
-Package WebGUI::PseudoRequest
-
 =head2 new
 
 Construct a new PseudoRequest object.  Creates a new Headers object as well and places
@@ -196,7 +64,7 @@ sub new {
 	my $this = shift;
 	my $class = ref($this) || $this;
 	my $headers = WebGUI::PseudoRequest::Headers->new();
-	my $self = {headers_out => $headers};
+	my $self = { headers_out => $headers, headers_in => {} };
 	bless $self, $class;
 	return $self;
 }
@@ -214,7 +82,11 @@ all form variables.
 sub body {
 	my $self = shift;
 	my $value = shift;
-	return keys %{ $self->{body} } unless defined $value;
+    if ( !defined $value ) {
+        return if !$self->{body};
+        return keys %{ $self->{body} } if wantarray;
+        return { %{ $self->{body} } };
+    }
 	if ($self->{body}->{$value}) {
         if (wantarray && ref $self->{body}->{$value} eq "ARRAY") {
             return @{$self->{body}->{$value}};
@@ -267,6 +139,19 @@ sub content_type {
 		$self->{content_type} = $value;
 	}
 	return $self->{content_type};
+}
+
+#----------------------------------------------------------------------------
+
+=head2 headers_in ( )
+
+Mimics the behavior of Apache2::Request->headers_in.
+
+=cut
+
+sub headers_in {
+       my $self = shift;
+       return $self->{headers_in};
 }
 
 #----------------------------------------------------------------------------
@@ -353,6 +238,23 @@ C<print> method.  Returns it as a scalar.
 sub get_output {
     my $self = shift;
     return $self->{output};
+}
+
+#----------------------------------------------------------------------------
+
+=head2 method ( [ $method ] )
+
+Getter/setter for the HTTP request method.
+
+=cut
+
+sub method {
+    my ($self, $newMethod) = @_;
+    my $method = $self->{method};
+    if (defined $newMethod) {
+        $self->{method} = $newMethod;
+    }
+    return $method;
 }
 
 #----------------------------------------------------------------------------
@@ -516,4 +418,24 @@ sub user {
 	return $self->{user};
 }
 
+#----------------------------------------------------------------------------
+
+=head2 jar ( $value )
+
+Getter and setter for cookie jar.  If $value is passed in, it will
+set the cookie jar of the object to that.  Returns the cookie jar
+hash.
+
+=cut
+
+sub jar {
+    my $self = shift;
+    my $value = shift;
+    if (defined $value) {
+        $self->{jar} = $value;
+    }
+    return $self->{jar};
+}
+
 1;
+

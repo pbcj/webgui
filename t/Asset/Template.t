@@ -16,8 +16,10 @@ use WebGUI::Test;
 use WebGUI::Session;
 use WebGUI::Asset::Template;
 use Exception::Class;
-use Test::More tests => 58; # increment this value for each test you create
+use Test::More tests => 11; # increment this value for each test you create
 use Test::Deep;
+use Data::Dumper;
+use JSON qw{ to_json from_json };
 
 my $session = WebGUI::Test->session;
 
@@ -26,22 +28,18 @@ cmp_deeply($list, {}, 'getList with no classname returns an empty hashref');
 
 my $template = " <tmpl_var variable> <tmpl_if conditional>true</tmpl_if> <tmpl_loop loop>XY</tmpl_loop> ";
 my %var = (
-	variable=>"AAAAA",
+	variable=>"BBBBB",
 	conditional=>1,
 	loop=>[{},{},{},{},{}]
 	);
-my $output = WebGUI::Asset::Template->processRaw($session,$template,\%var);
-ok($output =~ m/\bAAAAA\b/, "processRaw() - variables");
-ok($output =~ m/true/, "processRaw() - conditionals");
-ok($output =~ m/\s(?:XY){5}\s/, "processRaw() - loops");
 
+my $output = WebGUI::Asset::Template->processRaw($session,$template,\%var);
 my $importNode = WebGUI::Asset::Template->getImportNode($session);
 my $template = $importNode->addChild({className=>"WebGUI::Asset::Template", title=>"test", url=>"testingtemplates", template=>$template, namespace=>'WebGUI Test Template'});
 isa_ok($template, 'WebGUI::Asset::Template', "creating a template");
 
 is($template->get('parser'), 'WebGUI::Asset::Template::HTMLTemplate', 'default parser is HTMLTemplate');
 
-$var{variable} = "BBBBB";
 $output = $template->process(\%var);
 ok($output =~ m/\bBBBBB\b/, "process() - variables");
 ok($output =~ m/true/, "process() - conditionals");
@@ -71,8 +69,15 @@ $in->{$hname} = $template->getId;
 
 # processRaw sets some session variables (including username), so we need to
 # re-do it.
-WebGUI::Asset::Template->processRaw($session,$tmplText,\%var);
-my $output = $template->process(\%var);
+WebGUI::Asset::Template->processRaw($session,$template,\%var);
+
+# This has to get called to set up the stow good and proper
+WebGUI::Asset::Template->processVariableHeaders($session);
+
+$template->process(\%var);
+
+my $output = WebGUI::Asset::Template->getVariableJson($session);
+
 delete $in->{$hname};
 my $start = delete $out->{"$hname-Start"};
 my $end   = delete $out->{"$hname-End"};

@@ -310,48 +310,6 @@ Any scratch variables will be available in the template with this syntax:<br/>
         context     => q{Label for URL to make a duplicate and open the duplicate's edit screen},
     },
 
-    'attachment header index' => {
-        message     => 'Index',
-        lastUpdated => 1241192473,
-        context     => q|header for the sequence number column for attachments|,
-    },
-
-    'attachment header type' => {
-        message     => 'Type',
-        lastUpdated => 1241192473,
-        context     => q|header for the attachment types column|,
-    },
-
-    'attachment header url' => {
-        message     => 'Url',
-        lastUpdated => 1241192473,
-        context     => q|header for the url column for attachments|,
-    },
-
-    'attachment header remove' => {
-        message     => 'Remove',
-        lastUpdated => 1241192473,
-        context     => q|header for the remove button column for attachments|,
-    },
-
-	'attachment display label' => {
-        message     => 'Attachments',
-        lastUpdated => 1241192473,
-        context     => q|field label for displaying existing attachments|,
-     },
-        
-	'attachment add field label' => {
-        message     => 'Add Attachments',
-        lastUpdated => 1241192473,
-        context     => q|field label for adding new attachments|,
-     },
-
-	'attachment add button' => {
-        message     => 'Add', 
-        lastUpdated => 1241192473,
-        context     => q|button text for adding a new attachment|,
-     },
-
     'usePacked label' => {
         message     => q{Use Packed Template},
         lastUpdated => 0,
@@ -364,24 +322,6 @@ Any scratch variables will be available in the template with this syntax:<br/>
         context     => q{Description of asset property},
     },
 
-    'css label' => {
-        message     => "Stylesheet (CSS)",
-        lastUpdated => 0,
-        context     => 'Label for a CSS file attachment',
-    },
-
-    'js head label' => {
-        message     => "JavaScript (head)",
-        lastUpdated => 0,
-        context     => "Label for a JS file attachment that goes in the <head> block",
-    },
-
-    'js body label' => {
-        message     => "JavaScript (body)",
-        lastUpdated => 0,
-        context     => "Label for a JS file attachment that goes after all the content in the <body> block",
-    },
-
     'template in trash' => {
         message     => q|Template in trash|,
         lastUpdated => 0,
@@ -389,11 +329,6 @@ Any scratch variables will be available in the template with this syntax:<br/>
 
     'template in clipboard' => {
         message     => q|Template in clipboard|,
-        lastUpdated => 0,
-    },
-
-    'Already attached!' => {
-        message     => q|Already attached!|,
         lastUpdated => 0,
     },
 
@@ -435,8 +370,8 @@ Any scratch variables will be available in the template with this syntax:<br/>
         message => 'URL used by the fetch button.',
         lastUpdated => 1294165643,
     },
-    'Plain Text?' => {
-        message => 'Preview as Plain Text?',
+    'Plain Text' => {
+        message => 'Preview as Plain Text',
         lastUpdated => 1294165643,
     },
     'Plain Text hoverHelp' => {
