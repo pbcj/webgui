@@ -310,18 +310,6 @@ Any scratch variables will be available in the template with this syntax:<br/>
         context     => q{Label for URL to make a duplicate and open the duplicate's edit screen},
     },
 
-    'usePacked label' => {
-        message     => q{Use Packed Template},
-        lastUpdated => 0,
-        context     => q{Label for asset property},
-    },
-
-    'usePacked description' => {
-        message     => q{Use the packed version of this template for faster downloads},
-        lastUpdated => 0,
-        context     => q{Description of asset property},
-    },
-
     'template in trash' => {
         message     => q|Template in trash|,
         lastUpdated => 0,
@@ -337,15 +325,6 @@ Any scratch variables will be available in the template with this syntax:<br/>
         lastUpdated => 0,
     },
 
-    'field storageIdExample' => {
-        message     => 'Example Image',
-        lastUpdated => 0,
-    },
-
-    'field storageIdExample description' => {
-        message     => 'An example image to show what the template looks like before the user selects it',
-        lastUpdated => 0,
-    },
     'Configure' => {
         message => 'Configure',
         lastUpdated => 1294247160,

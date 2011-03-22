@@ -243,13 +243,6 @@ sub getEditForm {
 	    </tr>
 	));
 
-	$properties->yesNo(
-	    name        => "usePacked",
-	    label       => $i18n->get('usePacked label'),
-	    hoverHelp   => $i18n->get('usePacked description'),
-	    value       => $self->getValue("usePacked"),
-	);
-
 	$style->setScript($url->extras($_)) for qw(
 	    yui/build/json/json-min.js
 	    yui/build/container/container-min.js
@@ -273,14 +266,6 @@ sub getEditForm {
 			-hoverHelp=>$i18n->get('parser description'),
 		);
 	}
-
-	$properties->image(
-	    name        => 'storageIdExample',
-	    value       => $self->getValue('storageIdExample'),
-	    label       => $i18n->get('field storageIdExample'),
-	    hoverHelp   => $i18n->get('field storageIdExample description'),
-	);
-	
 
 	return $tabform;
 }
@@ -468,10 +453,8 @@ sub process {
 
 	$self->prepare unless ($self->{_prepared});
     my $parser      = $self->getParser($session, $self->get("parser"));
-    my $template    = $self->get('usePacked')
-                    ? $self->get('templatePacked')
-                    : $self->get('template')
-                    ;
+    my $template    = $self->get('template');
+	
     my $output;
     eval { $output = $parser->process($template, $vars); };
     if (my $e = Exception::Class->caught) {
